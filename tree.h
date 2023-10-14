@@ -1,5 +1,5 @@
 #include<stdlib.h>
-int Right,Left,Middle,Far_Right,Far_Left;
+// int Right,Left,Middle,Far_Right,Far_Left;
 
 // #include"movements.h"
 /**
@@ -84,7 +84,7 @@ tree* Reverse_traversal (tree* current_branch)
     tree *tmp = current_branch;
     char side = tmp->position;
     
-    printf("END..U-turn..moving to previous junction\n");
+    Serial.println("END..U-turn..moving to previous junction\n");
     // create a loop where it reaches to a junction with at least one posibility to join the branch
     /**
      * @brief first get the parent to see if it has more than one junction
@@ -100,12 +100,14 @@ tree* Reverse_traversal (tree* current_branch)
             {
                 break;
             }
-            printf("turn right\n");
-            printf("moving to next prev junction\n");
+            // Serial.println("turn right\n");
+            Turn_right();
+            // Serial.println("moving to next prev junction\n");
+            Move_to_the_next_Junction();
             tmp = tmp->parent;
             tmp->Left = NULL;
             free(tmp->Left);
-            // printf("%c",tmp->position);
+            // Serial.println("%c",tmp->position);
             
         }
         else if ( tmp-> position == 'R')
@@ -114,12 +116,14 @@ tree* Reverse_traversal (tree* current_branch)
             {
                 break;
             }
-            printf("turn left\n");
-            printf("moving to next prev junction\n");
+            // Serial.println("turn left\n");
+            Turn_left();
+            Serial.println("moving to next prev junction\n");
+            Move_to_the_next_Junction();
             tmp = tmp->parent;
             tmp->Right =NULL;
             free(tmp->Right);
-            // printf("%c",tmp->position);
+            // Serial.println("%c",tmp->position);
         }
         else 
         {
@@ -127,56 +131,67 @@ tree* Reverse_traversal (tree* current_branch)
             {
                 break;
             }
-            printf("moving forward\n");
-            printf("moving to next prev junction\n");
+
+            // Serial.println("moving forward\n");
+            // Serial.println("moving to next prev junction\n");
+            Move_out_of_Junction();
+            Move_to_the_next_Junction();
             tmp = tmp->parent;
             tmp->Foward =NULL;
             free(tmp->Foward);
-            // printf("%c",tmp->position);
+            // Serial.println("%c",tmp->position);
         }
     }
     // check the directional value of the branch
-    printf("\nreached!!! \npos is %c\n",tmp->position);
+    // Serial.println("\nreached!!! \npos is %c\n",tmp->position);
 
     // Return to noraml maze traversion 
     // check the orientation
     if ( tmp->position == 'L' )
     {
         // check the other junctions available to be confirmed by ir of their existence
-        if( tmp->parent->Foward != NULL && Far_Left)
+        if( tmp->parent->Foward != NULL)
         {
-            printf("Turn left...\n");
+            Serial.println("Turn left...\n");
+            Turn_left();
             tmp = tmp->parent->Foward;
         }
-        else if ( tmp->parent->Right != NULL &&  Middle)
+        else if ( tmp->parent->Right != NULL )
         {
-            printf("Move Forward...\n");
+            Serial.println("Move Forward...\n");
+           Move_out_of_Junction();
+        //    Move_to_the_next_Junction();
             tmp = tmp->parent->Right;
         }
     }
     else if ( tmp->position == 'F' )
     {
-        if ( Far_Left && tmp->parent->Left )
+        if (  tmp->parent->Left )
         {
-            printf("Turn left \n");
+            Serial.println("Turn left \n");
+            Turn_left();
             tmp = tmp->parent->Right;
         }
-        else if ( Far_Right && tmp->parent->Left )
+        else if (  tmp->parent->Left )
         {
-            printf("turn right\n");
+            Serial.println("turn right\n");
+            Turn_right();
             tmp = tmp->parent->Left;
         }
     }
     else if ( tmp->position == 'R' )
     {
-        if ( tmp->parent->Left && Middle )
+        if ( tmp->parent->Left )
         {
-            printf("Move forward\n");
+            Serial.println("Move forward\n");
+            Move_out_of_Junction();
+            // Move_to_the_next_Junction();
             tmp = tmp->parent->Left;
         }
-        else if ( Far_Right && tmp->parent->Foward)
+        else if ( tmp->parent->Foward)
         {
-            printf("Turn Right\n");
+            Serial.println("Turn Right\n");
+            Turn_right();
             tmp = tmp->parent->Foward;
         }
     }
